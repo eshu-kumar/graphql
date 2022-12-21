@@ -1,35 +1,34 @@
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@apollo/server/express4";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import express from "express";
-import { ApolloServer } from "apollo-server-express";
-import { resolvers } from "./data/resolvers.graphql";
-import { typeDefs } from "./data/schema.graphql";
-import { PORT } from "./config/config";
+import { resolvers } from "./data/resolvers.graphql.js";
+import { typeDefs } from "./data/schema.graphql.js";
+import { PORT } from "./config/config.js";
+import http from "http";
+import cors from "cors";
 
-/**
- * Create an Apollo server instance.
- */
-// //
-//setenv();
+const app = express();
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+const httpServer = http.createServer(app);
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req, res }) => {
-    return { req, res };
-  },
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
+await server.start();
+app.use(
+  "/graphql",
+  cors(),
+  expressMiddleware(server, {
+    context: async ({ req, res }) => ({ req, res }),
+  })
+);
 
-/**
- * Create an express server and apply the Apollo Server middleware
- */
-const app = express();
-server.start().then(() => {
-  server.applyMiddleware({ app });
-  app.listen({ port: PORT }, () => {
-    console.log(
-      `Server is running at http://localhost:${PORT}${server.graphqlPath}`
-    );
-  });
-});
-
-app.get("/", (req, res) => {
-  console.log("Apollo GraphQL Express server is ready");
-});
+await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
+console.log(`🚀 Server ready at http://localhost:4000/graphql`);

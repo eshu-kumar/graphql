@@ -2,8 +2,8 @@ import { Friends, Series } from "../db/dbConnector.js";
 export const resolvers = {
   Query: {
     getFriends: (root, args, context) => {
-      console.log("req header in getfriends resolver", context.req.headers);
-      console.log("req body in getfriends resolver", context.req.body);
+      //console.log("req header in getfriends resolver", context);
+      // console.log("req body in getfriends resolver", context.req.body);
       // console.log("args and root in resolver getfreinds", args, root);
       return new Promise((resolve, reject) => {
         Friends.find((err, friends) => {
@@ -40,8 +40,8 @@ export const resolvers = {
   },
   Mutation: {
     addFriend: (root, { friend }, context) => {
-      console.log("req header in addfriend resolver", context.req.headers);
-      console.log("req body in addfriend resolver", context.req.body);
+      // console.log("req header in addfriend resolver", context.req.headers);
+      // console.log("req body in addfriend resolver", context.req.body);
       //console.log("friend is ", friend);
       const { ...rest } = friend;
       console.log({ ...rest });
