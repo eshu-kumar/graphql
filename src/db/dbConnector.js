@@ -4,8 +4,6 @@ const { friendSchema } = require("./schema/friendSchema.js");
 const { seriesSchema } = require("./schema/seriesSchema.js");
 const env = process.env.NODE_ENV || "development";
 const mongoDbUrl = process.env.MONGO_DB_URL;
-console.log("process env", process.env);
-console.log("mongo db url", mongoDbUrl);
 /**
  * Mongoose Connection
  **/
