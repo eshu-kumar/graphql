@@ -7,6 +7,8 @@ import { PORT } from "./config/config";
 /**
  * Create an Apollo server instance.
  */
+// //
+//setenv();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
